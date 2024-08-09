@@ -10,6 +10,13 @@ internal class SSLGet
 {
     public static void Main(String[] args)
     {
+        // SslGet(args);
+
+        Http3Test();
+    }
+
+    private static void SslGet(string[] args)
+    {
         try
         {
             Curl.GlobalInit(CurlInitFlag.All);
@@ -36,6 +43,44 @@ internal class SSLGet
             Console.WriteLine(ex);
             Console.ReadLine();
         }
+    }
+
+    private static void Http3Test()
+    {
+        try
+        {
+            Curl.GlobalInit(CurlInitFlag.All);
+
+            using (var easy = new CurlEasy())
+            {
+                easy.SetOpt(CurlOption.Verbose, true);
+                easy.SetOpt(CurlOption.SslVersion, CurlSslVersion.TlsV1_1);
+                easy.SetOpt(CurlOption.HttpVersion, CurlHttpVersion.Http3_Only);
+                easy.DebugFunction = OnDebug;
+                easy.HeaderFunction = OnHeaders;
+                //easy.ProgressFunction = OnProgress;
+                easy.WriteFunction = OnWriteData;
+                easy.SslContextFunction = OnSslContext;
+                easy.Url = "https://http3.is/"; //"https://quic.nginx.org";
+                easy.CaInfo = "ca-bundle.crt";
+
+                var result = easy.Perform();
+                Console.WriteLine("Result curl code: {0}", result);
+            }
+
+            Curl.GlobalCleanup();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            Console.ReadLine();
+        }
+    }
+
+    private static int OnHeaders(byte[] buf, int size, int nmemb, object extraData)
+    {
+        Console.WriteLine($"Header: {Encoding.UTF8.GetString(buf)}");
+        return size * nmemb;
     }
 
     private static void OnDebug(CurlInfoType infoType, string message, int size, object extraData)
