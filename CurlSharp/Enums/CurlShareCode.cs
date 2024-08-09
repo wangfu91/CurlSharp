@@ -33,8 +33,8 @@ namespace CurlSharp
         NoMem = 4,
 
         /// <summary>
-        ///     End-of-enumeration marker; do not use in application code.
+        /// The requested sharing could not be done because the library you use do not have that particular feature enabled. (Added in 7.23.0)
         /// </summary>
-        Last = 5
+        NotBuiltIn = 5,
     };
 }

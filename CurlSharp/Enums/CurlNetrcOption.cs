@@ -36,7 +36,7 @@ namespace CurlSharp
         Required = 2,
 
         /// <summary>
-        ///     Last entry in enumeration; do not use in application code.
+        ///     LoginDenied entry in enumeration; do not use in application code.
         /// </summary>
         Last = 3
     };

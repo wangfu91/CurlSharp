@@ -1066,7 +1066,7 @@ namespace CurlSharp
         ///     one or more cipher strings separated by colons. Commas or spaces are
         ///     also acceptable separators but colons are normally used, !, - and +
         ///     can be used as operators. Valid examples of cipher lists include
-        ///     'RC4-SHA', ´SHA1+DES´, 'Tlsv1' and 'DEFAULT'. The default list is
+        ///     'RC4-SHA', ´SHA1+DES? 'Tlsv1' and 'DEFAULT'. The default list is
         ///     normally set when you compile OpenSSL.
         ///     <para>
         ///         You'll find more details about cipher lists on this URL:
@@ -1595,7 +1595,7 @@ namespace CurlSharp
         HeaderOpt = 229,
 
         /// <summary>
-        ///     Last numeric entry in the enumeration. Don't use this in your
+        ///     LoginDenied numeric entry in the enumeration. Don't use this in your
         ///     application code.
         /// </summary>
         LastEntry = 230,

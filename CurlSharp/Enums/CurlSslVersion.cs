@@ -29,8 +29,23 @@ namespace CurlSharp
         Sslv3 = 3,
 
         /// <summary>
-        ///     Last entry in enumeration; do not use in application code.
+        /// Use TLS version 1.0.
         /// </summary>
-        Last = 4
+        TlsV1_0 = 4,
+
+        /// <summary>
+        /// Use TLS version 1.1.
+        /// </summary>
+        TlsV1_1 = 5,
+
+        /// <summary>
+        /// Use TLS version 1.2.
+        /// </summary>
+        TlsV1_2 = 6,
+
+        /// <summary>
+        /// Use TLS version 1.3.
+        /// </summary>
+        TlsV1_3 = 7,
     };
 }

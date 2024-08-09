@@ -11,11 +11,65 @@ namespace CurlSharp
     public enum CurlInfo
     {
         /// <summary>
+        ///     Never used.
+        /// </summary>
+        None = 0x0,
+
+        /// <summary>
+        ///     The second argument receives, as a <c>string</c>, the last
+        ///     used effective URL.
+        /// </summary>
+        EffectiveUrl = 0x100001,
+
+        /// <summary>
+        ///     The second argument receives an <c>int</c> with the last received HTTP
+        ///     or FTP code. This option was known as <c>CURLINFO_HTTP_CODE</c> in
+        ///     libcurl 7.10.7 and earlier.
+        /// </summary>
+        ResponseCode = 0x200002,
+
+        /// <summary>
+        ///     The second argument receives a <c>double</c> indicating the total transaction
+        ///     time in seconds for the previous transfer. This time does not include
+        ///     the connect time, so if you want the complete operation time,
+        ///     you should add the <c>ConnectTime</c>.
+        /// </summary>
+        TotalTime = 0x300003,
+
+        /// <summary>
+        ///     The second argument receives, as a <c>double</c>, the time, in
+        ///     seconds it took from the start until the name resolving was
+        ///     completed.
+        /// </summary>
+        NameLookupTime = 0x300004,
+
+        /// <summary>
         ///     The second argument receives the elapsed time, as a <c>double</c>,
         ///     in seconds, from the start until the connect to the remote host
         ///     (or proxy) was completed.
         /// </summary>
         ConnectTime = 0x300005,
+
+        /// <summary>
+        ///     The second argument receives, as a <c>double</c>, the time, in
+        ///     seconds, it took from the start until the file transfer is just about
+        ///     to begin. This includes all pre-transfer commands and negotiations
+        ///     that are specific to the particular protocol(s) involved.
+        /// </summary>
+        PreTransferTime = 0x300006,
+
+        /// <summary>
+        ///     The second argument receives a <c>double</c> with the total amount
+        ///     of bytes that were uploaded.
+        /// </summary>
+        SizeUpload = 0x300007,
+
+        /// <summary>
+        ///     The second argument receives a <c>double</c> with the total amount of
+        ///     bytes that were downloaded. The amount is only for the latest transfer
+        ///     and will be reset again for each new transfer.
+        /// </summary>
+        SizeDownload = 0x300008,
 
         /// <summary>
         ///     The second argument receives, as a <c>double</c>, the content-length
@@ -37,12 +91,6 @@ namespace CurlSharp
         ///     doesn't support this.
         /// </summary>
         ContentType = 0x100012,
-
-        /// <summary>
-        ///     The second argument receives, as a <c>string</c>, the last
-        ///     used effective URL.
-        /// </summary>
-        EffectiveUrl = 0x100001,
 
         /// <summary>
         ///     The second argument receives, as a <c>long</c>, the remote time
@@ -84,17 +132,6 @@ namespace CurlSharp
         /// </summary>
         LastOne = 0x1C,
 
-        /// <summary>
-        ///     The second argument receives, as a <c>double</c>, the time, in
-        ///     seconds it took from the start until the name resolving was
-        ///     completed.
-        /// </summary>
-        NameLookupTime = 0x300004,
-
-        /// <summary>
-        ///     Never used.
-        /// </summary>
-        None = 0x0,
 
         /// <summary>
         ///     The second argument receives an <c>int</c> indicating the
@@ -108,14 +145,6 @@ namespace CurlSharp
         ///     depending on the platform. (Added in 7.12.2)
         /// </summary>
         OsErrno = 0x200019,
-
-        /// <summary>
-        ///     The second argument receives, as a <c>double</c>, the time, in
-        ///     seconds, it took from the start until the file transfer is just about
-        ///     to begin. This includes all pre-transfer commands and negotiations
-        ///     that are specific to the particular protocol(s) involved.
-        /// </summary>
-        PreTransferTime = 0x300006,
 
         /// <summary>
         ///     The second argument receives a reference to the private data
@@ -158,26 +187,6 @@ namespace CurlSharp
         RequestSize = 0x20000C,
 
         /// <summary>
-        ///     The second argument receives an <c>int</c> with the last received HTTP
-        ///     or FTP code. This option was known as <c>CURLINFO_HTTP_CODE</c> in
-        ///     libcurl 7.10.7 and earlier.
-        /// </summary>
-        ResponseCode = 0x200002,
-
-        /// <summary>
-        ///     The second argument receives a <c>double</c> with the total amount of
-        ///     bytes that were downloaded. The amount is only for the latest transfer
-        ///     and will be reset again for each new transfer.
-        /// </summary>
-        SizeDownload = 0x300008,
-
-        /// <summary>
-        ///     The second argument receives a <c>double</c> with the total amount
-        ///     of bytes that were uploaded.
-        /// </summary>
-        SizeUpload = 0x300007,
-
-        /// <summary>
         ///     The second argument receives a <c>double</c> with the average
         ///     download speed that cURL measured for the complete download.
         /// </summary>
@@ -211,12 +220,5 @@ namespace CurlSharp
         /// </summary>
         StartTransferTime = 0x300011,
 
-        /// <summary>
-        ///     The second argument receives a <c>double</c> indicating the total transaction
-        ///     time in seconds for the previous transfer. This time does not include
-        ///     the connect time, so if you want the complete operation time,
-        ///     you should add the <c>ConnectTime</c>.
-        /// </summary>
-        TotalTime = 0x300003,
     };
 }

@@ -1,11 +1,62 @@
 namespace CurlSharp
 {
     /// <summary>
-    ///     These are options available to build a multi-part form section
-    ///     in a call to <see cref="CurlHttpMultiPartForm.AddSection" />
+    /// These are options available to build a multi-part form section
+    /// in a call to <see cref="CurlHttpMultiPartForm.AddSection" />
+    /// https://curl.se/libcurl/c/curl_formadd.html
     /// </summary>
     public enum CurlFormOption
     {
+        /// <summary>
+        /// Not used.
+        /// </summary>
+        Nothing = 0,
+
+        /// <summary>
+        /// Followed by a <c>string</c> used to set the name of this part.
+        /// If you'd like it to contain zero bytes, you need to set the
+        /// length of the name with <c>NameLength</c>.
+        /// </summary>
+        CopyName = 1,
+
+        /// <summary>
+        ///     Followed by a <c>byte[]</c> used for the name of this part.
+        ///     If you'd like it to contain zero bytes, you need to set the
+        ///     length of the name with <c>NameLength</c>.
+        /// </summary>
+        PtrName = 2,
+
+        /// <summary>
+        /// Followed by an <c>int</c> setting the length of the name.
+        /// </summary>
+        NameLength = 3,
+
+        /// <summary>
+        /// Followed by a <c>string</c> is used for the contents of this part, the
+        /// actual data to send away. If you'd like it to contain zero bytes,
+        /// you need to set the length of the name with
+        /// <c>ContentsLength</c>.
+        /// </summary>
+        CopyContents = 4,
+
+        /// <summary>
+        ///     Followed by a <c>byte[]</c> used for the contents of this part.
+        ///     If you'd like it to contain zero bytes, you need to set the
+        ///     length of the name with <c>ContentsLength</c>.
+        /// </summary>
+        PtrContents = 5,
+
+        /// <summary>
+        ///     Followed by an <c>int</c> setting the length of the contents.
+        /// </summary>
+        ContentsLength = 6,
+
+        /// <summary>
+        ///     Followed by a file name, and does the file read: the contents
+        ///     will be used in as data in this part.
+        /// </summary>
+        FileContent = 7,
+
         /// <summary>
         ///     Another possibility to send options to
         ///     <see cref="CurlHttpMultiPartForm.AddSection" /> is this option, that
@@ -19,66 +70,9 @@ namespace CurlSharp
         Array = 8,
 
         /// <summary>
-        ///     Followed by a <c>string</c>, tells libcurl that a buffer is to be
-        ///     used to upload data instead of using a file.
+        ///     No longer used.
         /// </summary>
-        Buffer = 11,
-
-        /// <summary>
-        ///     Followed by an <c>int</c> with the size of the
-        ///     <c>BufferPtr</c> byte array, tells libcurl the length of
-        ///     the data to upload.
-        /// </summary>
-        BufferLength = 13,
-
-        /// <summary>
-        ///     Followed by a <c>byte[]</c> array, tells libcurl the address of
-        ///     the buffer containing data to upload (as indicated with
-        ///     <c>Buffer</c>). You must also use
-        ///     <c>BufferLength</c> to set the length of the buffer area.
-        /// </summary>
-        BufferPtr = 12,
-
-        /// <summary>
-        ///     Specifies extra headers for the form POST section. This takes an
-        ///     <see cref="CurlSlist" /> prepared in the usual way using
-        ///     <see cref="CurlSlist.Append" /> and appends the list of headers to
-        ///     those libcurl automatically generates.
-        /// </summary>
-        ContentHeader = 15,
-
-        /// <summary>
-        ///     Followed by an <c>int</c> setting the length of the contents.
-        /// </summary>
-        ContentsLength = 6,
-
-        /// <summary>
-        ///     Followed by a <c>string</c> with a content-type will make cURL
-        ///     use this given content-type for this file upload part, possibly
-        ///     instead of an internally chosen one.
-        /// </summary>
-        ContentType = 14,
-
-        /// <summary>
-        ///     Followed by a <c>string</c> is used for the contents of this part, the
-        ///     actual data to send away. If you'd like it to contain zero bytes,
-        ///     you need to set the length of the name with
-        ///     <c>ContentsLength</c>.
-        /// </summary>
-        CopyContents = 4,
-
-        /// <summary>
-        ///     Followed by a <c>string</c> used to set the name of this part.
-        ///     If you'd like it to contain zero bytes, you need to set the
-        ///     length of the name with <c>NameLength</c>.
-        /// </summary>
-        CopyName = 1,
-
-        /// <summary>
-        ///     This should be the last argument to a call to
-        ///     <see cref="CurlHttpMultiPartForm.AddSection" />.
-        /// </summary>
-        End = 17,
+        Obsolete = 9,
 
         /// <summary>
         ///     Followed by a file name, makes this part a file upload part. It
@@ -93,10 +87,40 @@ namespace CurlSharp
         File = 10,
 
         /// <summary>
-        ///     Followed by a file name, and does the file read: the contents
-        ///     will be used in as data in this part.
+        ///     Followed by a <c>string</c>, tells libcurl that a buffer is to be
+        ///     used to upload data instead of using a file.
         /// </summary>
-        FileContent = 7,
+        Buffer = 11,
+
+        /// <summary>
+        ///     Followed by a <c>byte[]</c> array, tells libcurl the address of
+        ///     the buffer containing data to upload (as indicated with
+        ///     <c>Buffer</c>). You must also use
+        ///     <c>BufferLength</c> to set the length of the buffer area.
+        /// </summary>
+        BufferPtr = 12,
+
+        /// <summary>
+        ///     Followed by an <c>int</c> with the size of the
+        ///     <c>BufferPtr</c> byte array, tells libcurl the length of
+        ///     the data to upload.
+        /// </summary>
+        BufferLength = 13,
+
+        /// <summary>
+        ///     Followed by a <c>string</c> with a content-type will make cURL
+        ///     use this given content-type for this file upload part, possibly
+        ///     instead of an internally chosen one.
+        /// </summary>
+        ContentType = 14,
+
+        /// <summary>
+        ///     Specifies extra headers for the form POST section. This takes an
+        ///     <see cref="CurlSlist" /> prepared in the usual way using
+        ///     <see cref="CurlSlist.Append" /> and appends the list of headers to
+        ///     those libcurl automatically generates.
+        /// </summary>
+        ContentHeader = 15,
 
         /// <summary>
         ///     Followed by a <c>string</c> file name, will make libcurl use the
@@ -105,20 +129,12 @@ namespace CurlSharp
         /// </summary>
         Filename = 16,
 
-        /// <summary>
-        ///     Followed by an <c>int</c> setting the length of the name.
-        /// </summary>
-        NameLength = 3,
 
         /// <summary>
-        ///     Not used.
+        ///     This should be the last argument to a call to
+        ///     <see cref="CurlHttpMultiPartForm.AddSection" />.
         /// </summary>
-        Nothing = 0,
-
-        /// <summary>
-        ///     No longer used.
-        /// </summary>
-        Obsolete = 9,
+        End = 17,
 
         /// <summary>
         ///     No longer used.
@@ -126,17 +142,23 @@ namespace CurlSharp
         Obsolete2 = 18,
 
         /// <summary>
-        ///     Followed by a <c>byte[]</c> used for the contents of this part.
-        ///     If you'd like it to contain zero bytes, you need to set the
-        ///     length of the name with <c>ContentsLength</c>.
+        /// Tells libcurl to use the CURLOPT_READFUNCTION callback to get data.
+        /// The parameter you pass to CURLFORM_STREAM is the pointer passed on 
+        /// to the read callback's fourth argument. If you want the part to look
+        /// like a file upload one, set the CURLFORM_FILENAME parameter as well.
+        /// Note that when using CURLFORM_STREAM, CURLFORM_CONTENTSLENGTH must 
+        /// also be set with the total expected length of the part unless the 
+        /// formpost is sent chunked encoded. (Option added in libcurl 7.18.2)
         /// </summary>
-        PtrContents = 5,
+        Stream = 19,
 
         /// <summary>
-        ///     Followed by a <c>byte[]</c> used for the name of this part.
-        ///     If you'd like it to contain zero bytes, you need to set the
-        ///     length of the name with <c>NameLength</c>.
+        /// followed by a curl_off_t value giving the length of the contents.
+        /// Note that for CURLFORM_STREAM contents, this option is mandatory.
+        /// If you pass a 0 (zero) for this option, libcurl calls strlen() on the contents to figure out the size. 
+        /// If you really want to send a zero byte content then you must make sure strlen() on the data pointer returns zero.
+        /// (Option added in 7.46.0)
         /// </summary>
-        PtrName = 2
+        ContentLen = 20,
     };
 }

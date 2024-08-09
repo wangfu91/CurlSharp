@@ -46,6 +46,7 @@ namespace CurlSharp
 
         static NativeMethods()
         {
+            /*
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 switch (RuntimeInformation.OSArchitecture)
@@ -62,6 +63,7 @@ namespace CurlSharp
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 throw new InvalidOperationException("Can not run on other platform than Win NET");
 #endif
+            */
         }
         
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]

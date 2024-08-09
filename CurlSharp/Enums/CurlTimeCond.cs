@@ -32,7 +32,7 @@ namespace CurlSharp
         LastMod = 3,
 
         /// <summary>
-        ///     Last entry in enumeration; do not use in application code.
+        ///     LoginDenied entry in enumeration; do not use in application code.
         /// </summary>
         Last = 4
     };

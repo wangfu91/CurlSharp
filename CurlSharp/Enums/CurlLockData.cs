@@ -41,8 +41,15 @@ namespace CurlSharp
         Connect = 5,
 
         /// <summary>
-        ///     End-of-enumeration marker; do not use in application code.
+        /// The Public Suffix List stored in the share object is made available to all easy handle bound to the later. 
+        /// Since the Public Suffix List is periodically refreshed, this avoids updates in too many different contexts.
         /// </summary>
-        Last = 6
+        DataPsl = 6,
+
+        /// <summary>
+        /// The in-memory HSTS cache.
+        /// It is not supported to share the HSTS between multiple concurrent threads.
+        /// </summary>
+        DataHsts = 7,
     };
 }

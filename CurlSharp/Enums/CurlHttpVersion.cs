@@ -39,8 +39,14 @@ namespace CurlSharp
         Http2_PriorKnowledge = 5,
 
         /// <summary>
-        ///     Last entry in enumeration; do not use in application code.
+        ///  Use HTTP/3, fallback to HTTP/2 or HTTP/1 if needed.
+        ///  For HTTPS only. For HTTP, this option makes libcurl return error.
         /// </summary>
-        Last = 6
+        Http3 = 30,
+
+        /// <summary>
+        /// Use HTTP/3 without fallback. For HTTPS only. For HTTP, this makes libcurl return error.
+        /// </summary>
+        Http3_Only = 31,
     }
 }
