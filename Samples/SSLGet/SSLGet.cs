@@ -61,7 +61,8 @@ internal class SSLGet
                 //easy.ProgressFunction = OnProgress;
                 easy.WriteFunction = OnWriteData;
                 easy.SslContextFunction = OnSslContext;
-                easy.Url = "https://http3.is/"; //"https://quic.nginx.org";
+                //easy.Url = "https://http3.is/";
+                easy.Url = "https://quic.nginx.org/";
                 easy.CaInfo = "ca-bundle.crt";
 
                 var result = easy.Perform();
