@@ -5,6 +5,10 @@
     <TargetFramework>net462</TargetFramework>
     <OutputPath>..\bin\</OutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+  </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\..\CurlSharp\CurlSharp.csproj" />
