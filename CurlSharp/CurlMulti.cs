@@ -291,11 +291,12 @@ namespace CurlSharp
                 NativeMethods.curl_shim_multi_info_free(pInfo);
             }
             _bGotMultiInfo = true;
+            return _multiInfo;
 #else
             _multiInfo = null;
             throw new NotImplementedException("CurlMulti.InfoRead()");
 #endif
-            return _multiInfo;
+
         }
     }
 }

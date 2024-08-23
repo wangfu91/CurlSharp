@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CurlSharp.Enums;
+using System;
 using System.Runtime.InteropServices;
 
 namespace CurlSharp
@@ -104,6 +105,9 @@ namespace CurlSharp
     ///     is okay.
     /// </remarks>
     public delegate CurlIoError CurlIoctlCallback(CurlIoCommand cmd, Object extraData);
+
+
+    public delegate CurlSeekError CurlSeekCallback(long offset, int origin, Object extraData);
 
     /// <summary>
     ///     Called when cURL wants to report progress.

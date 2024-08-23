@@ -20,6 +20,7 @@
 
 //#define USE_LIBCURLSHIM
 
+using CurlSharp.Enums;
 using System;
 using System.IO;
 using System.Reflection;
@@ -173,6 +174,10 @@ namespace CurlSharp
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate CurlIoError _CurlIoctlCallback(CurlIoCommand cmd, IntPtr parm);
 
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate CurlSeekError _CurlSeekCallback(long offset, int origin);
+
         #endregion
 
         [DllImport(LIBCURL, CallingConvention = CallingConvention.Cdecl)]
@@ -204,6 +209,9 @@ namespace CurlSharp
 
         [DllImport(LIBCURL, CallingConvention = CallingConvention.Cdecl)]
         public static extern CurlCode curl_easy_setopt(IntPtr pCurl, CurlOption opt, _CurlIoctlCallback parm);
+
+        [DllImport(LIBCURL, CallingConvention = CallingConvention.Cdecl)]
+        public static extern CurlCode curl_easy_setopt(IntPtr pCurl, CurlOption opt, _CurlSeekCallback parm);
 
         #endregion
 

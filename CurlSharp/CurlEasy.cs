@@ -17,6 +17,7 @@
  *
  **************************************************************************/
 
+using CurlSharp.Enums;
 using System;
 using System.Runtime.InteropServices;
 
@@ -48,7 +49,6 @@ namespace CurlSharp
         private int _bufferSize;
         private string _caInfo;
         private string _caPath;
-        private CurlClosePolicy _closePolicy;
         private int _connectTimeout;
         private string _cookie;
         private string _cookieFile;
@@ -58,8 +58,6 @@ namespace CurlSharp
         private string _customRequest;
         private object _debugData;
         private int _dnsCacheTimeout;
-        private bool _dnsUseGlobalCache;
-        private string _egdSocket;
         private string _encoding;
         private string _errorBuffer;
         private bool _failOnError;
@@ -88,7 +86,7 @@ namespace CurlSharp
         private bool _ignoreContentLength;
         private long _infileSize;
         private string _interface;
-        private object _ioctlData;
+        private object _seekData;
         private string _krb4Level;
         private int _lowSpeedLimit;
         private int _lowSpeedTime;
@@ -115,12 +113,14 @@ namespace CurlSharp
         private NativeMethods._CurlGenericCallback _pcbHeader;
         private NativeMethods._CurlDebugCallback _pcbDebug;
         private NativeMethods._CurlIoctlCallback _pcbIoctl;
+        private NativeMethods._CurlSeekCallback _pcbSeek;
         private NativeMethods._CurlProgressCallback _pcbProgress;
         private NativeMethods._CurlSslCtxCallback _pcbSslCtx;
 #endif
         private CurlDebugCallback _pfCurlDebug;
         private CurlHeaderCallback _pfCurlHeader;
         private CurlIoctlCallback _pfCurlIoctl;
+        private CurlSeekCallback _pfCurlSeek;
         private CurlProgressCallback _pfCurlProgress;
         private CurlReadCallback _pfCurlRead;
         private CurlSslContextCallback _pfCurlSslContext;
@@ -133,13 +133,10 @@ namespace CurlSharp
         private string _proxy;
         private int _proxyPort;
         private string _proxyUserPwd;
-        private bool _put;
-        private string _randomFile;
         private string _range;
         private object _readData;
         private string _referer;
         private int _resumeFrom;
-        private string _sourceUrl;
         private string _sslCert;
         private string _sslCertPasswd;
         private string _sslCipherList;
@@ -147,7 +144,6 @@ namespace CurlSharp
         private string _sslEngine;
         private bool _sslEngineDefault;
         private string _sslKey;
-        private string _sslKeyPasswd;
         private bool _sslVerifyPeer;
         private bool _sslVerifyHost;
         private bool _tcpNoDelay;
@@ -161,7 +157,6 @@ namespace CurlSharp
         private string _userPwd;
         private bool _verbose;
         private object _writeData;
-        private string _writeInfo;
 
         /// <summary>
         ///     Constructor
@@ -303,17 +298,17 @@ namespace CurlSharp
             return setCurlOpt(_curlSslCtxData, CurlOption.SslCtxData);
         }
 
-        private IntPtr _curlIoctlData = IntPtr.Zero;
+        private IntPtr _curlSeekData = IntPtr.Zero;
 
         /// <summary>
-        ///     Object to pass to OnIoctlCallback.
+        ///     Object to pass to OnSeekCallback.
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        private CurlCode setIoctlData(object data)
+        private CurlCode setSeekData(object data)
         {
-            _curlIoctlData = getHandle(data);
-            return setCurlOpt(_curlIoctlData, CurlOption.IoctlData);
+            _curlSeekData = getHandle(data);
+            return setCurlOpt(_curlSeekData, CurlOption.SeekData);
         }
 #endif
 
@@ -377,14 +372,14 @@ namespace CurlSharp
             }
         }
 
-        public object IoctlData
+        public object SeekData
         {
-            get { return _ioctlData; }
+            get { return _seekData; }
             set
             {
-                _ioctlData = value;
+                _seekData = value;
 #if !USE_LIBCURLSHIM
-                setIoctlData(value);
+                setSeekData(value);
 #endif
             }
         }
@@ -427,11 +422,6 @@ namespace CurlSharp
         public CurlSlist Postquote
         {
             set { setSlistObject(CurlOption.Postquote, value); }
-        }
-
-        public CurlSlist SourceQuote
-        {
-            set { setSlistObject(CurlOption.SourceQuote, value); }
         }
 
         public CurlSlist Http200Aliases
@@ -487,18 +477,6 @@ namespace CurlSharp
             }
         }
 
-        public CurlClosePolicy ClosePolicy
-        {
-            get { return _closePolicy; }
-            set
-            {
-                _closePolicy = value;
-                var l = Convert.ToInt32(value);
-                setLastError(NativeMethods.curl_easy_setopt(_pCurl, CurlOption.ClosePolicy, (IntPtr) l),
-                    CurlOption.ClosePolicy);
-            }
-        }
-
         public CurlWriteCallback WriteFunction
         {
             get { return _pfCurlWrite; }
@@ -526,13 +504,13 @@ namespace CurlSharp
         public CurlProgressCallback ProgressFunction
         {
             get { return _pfCurlProgress; }
-            set { setFunctionOptions(CurlOption.ProgressFunction, value); }
+            set { setFunctionOptions(CurlOption.XferInfoFunction, value); }
         }
 
-        public CurlIoctlCallback IoctlFunction
+        public CurlSeekCallback SeekFunction
         {
-            get { return _pfCurlIoctl; }
-            set { setFunctionOptions(CurlOption.IoctlFunction, value); }
+            get { return _pfCurlSeek; }
+            set { setFunctionOptions(CurlOption.SeekFunction, value);}
         }
 
         public CurlSslContextCallback SslContextFunction
@@ -595,12 +573,6 @@ namespace CurlSharp
         {
             get { return _transferText; }
             set { setBoolOption(CurlOption.TransferText, ref _transferText, value); }
-        }
-
-        public bool Put
-        {
-            get { return _put; }
-            set { setBoolOption(CurlOption.Put, ref _put, value); }
         }
 
         public bool HttpProxyTunnel
@@ -679,12 +651,6 @@ namespace CurlSharp
         {
             get { return _sslEngineDefault; }
             set { setBoolOption(CurlOption.SslEngineDefault, ref _sslEngineDefault, value); }
-        }
-
-        public bool DnsUseGlobalCache
-        {
-            get { return _dnsUseGlobalCache; }
-            set { setBoolOption(CurlOption.DnsUseGlobalCache, ref _dnsUseGlobalCache, value); }
         }
 
         public bool NoSignal
@@ -900,7 +866,7 @@ namespace CurlSharp
         public string Encoding
         {
             get { return _encoding; }
-            set { setStringOption(CurlOption.Encoding, out _encoding, value); }
+            set { setStringOption(CurlOption.AcceptEncoding, out _encoding, value); }
         }
 
         public string Krb4Level
@@ -913,18 +879,6 @@ namespace CurlSharp
         {
             get { return _caInfo; }
             set { setStringOption(CurlOption.CaInfo, out _caInfo, value); }
-        }
-
-        public string RandomFile
-        {
-            get { return _randomFile; }
-            set { setStringOption(CurlOption.RandomFile, out _randomFile, value); }
-        }
-
-        public string EgdSocket
-        {
-            get { return _egdSocket; }
-            set { setStringOption(CurlOption.EgdSocket, out _egdSocket, value); }
         }
 
         public string CookieJar
@@ -945,12 +899,6 @@ namespace CurlSharp
             set { setStringOption(CurlOption.SslCipherList, out _sslCipherList, value); }
         }
 
-        public string WriteInfo
-        {
-            get { return _writeInfo; }
-            set { setStringOption(CurlOption.WriteInfo, out _writeInfo, value); }
-        }
-
         public string CaPath
         {
             get { return _caPath; }
@@ -969,12 +917,6 @@ namespace CurlSharp
             set { setStringOption(CurlOption.SslEngine, out _sslEngine, value); }
         }
 
-        public string SslKeyPasswd
-        {
-            get { return _sslKeyPasswd; }
-            set { setStringOption(CurlOption.SslKeyPasswd, out _sslKeyPasswd, value); }
-        }
-
         public string ErrorBuffer
         {
             get { return _errorBuffer; }
@@ -991,12 +933,6 @@ namespace CurlSharp
         {
             get { return _ftpAccount; }
             set { setStringOption(CurlOption.FtpAccount, out _ftpAccount, value); }
-        }
-
-        public string SourceUrl
-        {
-            get { return _sourceUrl; }
-            set { setStringOption(CurlOption.SourceUrl, out _sourceUrl, value); }
         }
 
         public string EffectiveUrl
@@ -1169,7 +1105,8 @@ namespace CurlSharp
             _sslContextData = null;
 
             _pfCurlIoctl = null;
-            _ioctlData = null;
+            _pfCurlSeek = null;
+            _seekData = null;
         }
 
         private CurlCode setMultiPartFormObject()
@@ -1177,8 +1114,8 @@ namespace CurlSharp
             ensureHandle();
             var retCode = _httpMultiPartForm == null
                 ? CurlCode.BadFunctionArgument
-                : NativeMethods.curl_easy_setopt(_pCurl, CurlOption.HttpPost, _httpMultiPartForm.GetHandle());
-            setLastError(retCode, CurlOption.HttpPost);
+                : NativeMethods.curl_easy_setopt(_pCurl, CurlOption.MimePost, _httpMultiPartForm.GetHandle());
+            setLastError(retCode, CurlOption.MimePost);
             return retCode;
         }
 
@@ -1258,7 +1195,7 @@ namespace CurlSharp
                     freeHandle(ref _curlDebugData);
                     freeHandle(ref _curlProgressData);
                     freeHandle(ref _curlHeaderData);
-                    freeHandle(ref _curlIoctlData);
+                    freeHandle(ref _curlSeekData);
                     freeHandle(ref _curlSslCtxData);
 #endif
                     NativeMethods.curl_easy_cleanup(_pCurl);
@@ -1385,9 +1322,6 @@ namespace CurlSharp
             if ((int) option < CURLOPTTYPE_OBJECTPOINT)
             {
                 var i = 0;
-                if ((option == CurlOption.DnsUseGlobalCache) || (option == CurlOption.SourcePort))
-                    return CurlCode.BadFunctionArgument;
-
                 if (option == CurlOption.TimeValue)
                 {
                     // unboxing may throw class cast exception
@@ -1449,17 +1383,14 @@ namespace CurlSharp
                 case CurlOption.SslCtxData:
                     _sslContextData = parameter;
                     break;
-                case CurlOption.IoctlData:
-                    _ioctlData = parameter;
+                case CurlOption.SeekData:
+                    _seekData = parameter;
                     break;
 
                 // items that can't be set externally or
                 // obsolete items
                 case CurlOption.ErrorBuffer:
                 case CurlOption.Stderr:
-                case CurlOption.SourceHost:
-                case CurlOption.SourcePath:
-                case CurlOption.PasvHost:
                     return CurlCode.BadFunctionArgument;
 
                 // singular case for share
@@ -1471,7 +1402,7 @@ namespace CurlSharp
                 }
 
                 // multipart HTTP post
-                case CurlOption.HttpPost:
+                case CurlOption.MimePost:
                 {
                     _httpMultiPartForm = parameter as CurlHttpMultiPartForm;
                     retCode = setMultiPartFormObject();
@@ -1483,7 +1414,6 @@ namespace CurlSharp
                 case CurlOption.Prequote:
                 case CurlOption.Quote:
                 case CurlOption.Postquote:
-                case CurlOption.SourceQuote:
                 case CurlOption.TelnetOptions:
                 case CurlOption.Http200Aliases:
                 {
@@ -1573,7 +1503,7 @@ namespace CurlSharp
                     break;
                 }
 
-                case CurlOption.ProgressFunction:
+                case CurlOption.XferInfoFunction:
                 {
                     var pf = pfn as CurlProgressCallback;
                     if (pf == null)
@@ -1609,12 +1539,12 @@ namespace CurlSharp
                     break;
                 }
 
-                case CurlOption.IoctlFunction:
+                case CurlOption.SeekFunction:
                 {
-                    var iof = pfn as CurlIoctlCallback;
-                    if (iof == null)
+                    var sf = pfn as CurlSeekCallback;
+                    if (sf == null)
                         return CurlCode.BadFunctionArgument;
-                    _pfCurlIoctl = iof;
+                    _pfCurlSeek = sf;
                     break;
                 }
 
@@ -2010,21 +1940,22 @@ namespace CurlSharp
             _pcbHeader = _curlHeaderCallback;
             _pcbSslCtx = _curlSslCtxCallback;
             _pcbIoctl = _curlIoctlCallback;
+            _pcbSeek = _curlSeekCallback;
 
             setLastError(NativeMethods.curl_easy_setopt(_pCurl, CurlOption.WriteFunction, _pcbWrite),
                 CurlOption.WriteFunction);
             setLastError(NativeMethods.curl_easy_setopt(_pCurl, CurlOption.ReadFunction, _pcbRead),
                 CurlOption.ReadFunction);
-            setLastError(NativeMethods.curl_easy_setopt(_pCurl, CurlOption.ProgressFunction, _pcbProgress),
-                CurlOption.ProgressFunction);
+            setLastError(NativeMethods.curl_easy_setopt(_pCurl, CurlOption.XferInfoFunction, _pcbProgress),
+                CurlOption.XferInfoFunction);
             setLastError(NativeMethods.curl_easy_setopt(_pCurl, CurlOption.HeaderFunction, _pcbHeader),
                 CurlOption.HeaderFunction);
             setLastError(NativeMethods.curl_easy_setopt(_pCurl, CurlOption.DebugFunction, _pcbDebug),
                 CurlOption.DebugFunction);
             setLastError(NativeMethods.curl_easy_setopt(_pCurl, CurlOption.SslCtxFunction, _pcbSslCtx),
                 CurlOption.SslCtxFunction);
-            setLastError(NativeMethods.curl_easy_setopt(_pCurl, CurlOption.IoctlFunction, _pcbIoctl),
-                CurlOption.IoctlFunction);
+            setLastError(NativeMethods.curl_easy_setopt(_pCurl, CurlOption.SeekFunction, _pcbSeek),
+                CurlOption.SeekFunction);
             setLastError(NativeMethods.curl_easy_setopt(_pCurl, CurlOption.NoProgress, (IntPtr) 0),
                 CurlOption.NoProgress);
 
@@ -2034,7 +1965,7 @@ namespace CurlSharp
             setProgressData(null);
             setDebugData(null);
             setSslCtxData(null);
-            setIoctlData(null);
+            setSeekData(null);
 #endif
         }
 
@@ -2205,9 +2136,16 @@ namespace CurlSharp
 
         private CurlIoError _curlIoctlCallback(CurlIoCommand cmd, IntPtr parm)
         {
-            if ((_pfCurlIoctl == null) || (_ioctlData == null))
+            if ((_pfCurlIoctl == null) || (_seekData == null))
                 return CurlIoError.UnknownCommand;
-            return _pfCurlIoctl(cmd, _ioctlData);
+            return _pfCurlIoctl(cmd, _seekData);
+        }
+
+        private CurlSeekError _curlSeekCallback(long offset, int origin)
+        {
+            if (_pfCurlSeek == null || _seekData == null)
+                return CurlSeekError.Fail;
+            return _pfCurlSeek(offset, origin, _seekData);
         }
 #endif
     }
