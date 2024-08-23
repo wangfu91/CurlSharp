@@ -1,3 +1,5 @@
+using System;
+
 namespace CurlSharp
 {
     /// <summary>
@@ -14,6 +16,7 @@ namespace CurlSharp
         /// <summary>
         ///     Initialize Ssl.
         /// </summary>
+        [Obsolete("No purpose since 7.57.0")]
         Ssl = 1,
 
         /// <summary>
